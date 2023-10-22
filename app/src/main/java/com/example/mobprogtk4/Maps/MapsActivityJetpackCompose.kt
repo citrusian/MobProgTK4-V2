@@ -74,45 +74,22 @@ fun MapsJetpack(
 
             // Maps
             val singapore = LatLng(1.35, 103.87)
-//            val cameraPositionState = rememberCameraPositionState {
-//                position = CameraPosition.fromLatLngZoom(singapore, 10f)
-//            }
-
-//            val context = LocalContext.current
-//            val apiKey = remember { context.getString(R.string.gmapsAPIkey) }
-//
-//
-//            GoogleMap(
-//                modifier = Modifier.fillMaxSize(),
-//                cameraPositionState = cameraPositionState
-//            ) {
-//                Marker(
-//                    state = MarkerState(position = singapore),
-//                    title = "Singapore",
-//                    snippet = "Marker in Singapore"
-//                )
-//            }
-
+            val cameraPositionState = rememberCameraPositionState {
+                position = CameraPosition.fromLatLngZoom(singapore, 10f)
+            }
 
             val context = LocalContext.current
             val apiKey = remember { context.getString(R.string.gmapsAPIkey) }
-            val locationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
-
-            val cameraPositionState = rememberCameraPositionState {
-                position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 10f)
-            }
 
 
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState,
-//                onMyLocationButtonClick = {
-////                     Get Perm, idk how to do that in jetpack compose
-//                }
+                cameraPositionState = cameraPositionState
             ) {
                 Marker(
-                    title = "Curloc",
-                    snippet = "Curloc"
+                    state = MarkerState(position = singapore),
+                    title = "Singapore",
+                    snippet = "Marker in Singapore"
                 )
             }
 

@@ -59,6 +59,8 @@ class MainActivity : ComponentActivity() {
 //                                        "profile"
                                         "MapsJetpack"
                                     )
+//                                    val intent = Intent(applicationContext, MapsActivity::class.java)
+//                                    startActivity(intent)
                                     }
                             }
 
@@ -151,6 +153,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+
+    companion object {
+        val DEBUG_TAG = "DEBUG_LOG :"
+        val ERROR_TAG = "ERROR_LOG :"
+        val INFO_TAG  = "INFO_LOG  :"
     }
 }
 

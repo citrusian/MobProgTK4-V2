@@ -2,6 +2,7 @@ package com.example.mobprogtk4.Maps
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import com.example.mobprogtk4.R
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -17,6 +18,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
 
+    val profileButton = findViewById<Button>(R.id.profileButton)
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -27,6 +33,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        val profileButton = findViewById<Button>(R.id.profileButton)
+        profileButton.setOnClickListener {
+//            navController.navigate("profile")
+        }
+
     }
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
