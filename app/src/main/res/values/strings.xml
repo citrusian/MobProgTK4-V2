@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MobProgTK4</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="profile">Profile</string>
 </resources>

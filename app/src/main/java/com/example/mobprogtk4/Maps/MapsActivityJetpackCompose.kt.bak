@@ -1,0 +1,188 @@
+package com.example.mobprogtk4.Maps
+
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.os.Looper
+import android.provider.Settings.System.getString
+import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.core.content.ContextCompat
+import com.example.mobprogtk4.R
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.core.location.LocationManagerCompat.requestLocationUpdates
+import androidx.core.location.LocationRequestCompat.QUALITY_HIGH_ACCURACY
+import com.google.accompanist.permissions.isGranted
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.maps.model.Marker
+
+@Preview(showBackground = true)
+@Composable
+fun MapsJetpack(
+    onProfile: () -> Unit = {}
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Header and Button
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top
+            ) {
+                Text(
+                    text = "Maps",
+                    fontSize = 30.sp,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .weight(1f)
+                )
+                Button(
+                    onClick = onProfile,
+                    modifier = Modifier
+                        .padding(8.dp)
+                ) {
+                    Text(text = "Profile")
+                }
+            }
+
+            // Maps
+            val singapore = LatLng(1.35, 103.87)
+            val cameraPositionState = rememberCameraPositionState {
+                position = CameraPosition.fromLatLngZoom(singapore, 10f)
+            }
+
+            val context = LocalContext.current
+            val apiKey = remember { context.getString(R.string.gmapsAPIkey) }
+            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+            RequestLocationUpdates(fusedLocationClient, context)
+
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState,
+            ) {
+                LocationPermissionHandler {
+                    if (ActivityCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+
+                    } else {
+                        // Handle the case where permissions are not granted.
+                        // You can display a message or request permissions here.
+                    }
+                }
+            }
+        }
+    }
+}
+
+fun DisplayUserLocationOnMap(userLocation: LatLng?) {
+    if (userLocation != null) {
+        Marker(
+            position = userLocation,
+            title = "Your Location",
+            draggable = false,
+            onClick = {
+                // Handle marker click event, if needed
+            }
+        )
+    }
+}
+
+
+@Composable
+private fun RequestLocationUpdates(fusedLocationClient: FusedLocationProviderClient, context: Context) {
+    if (ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    ) {
+        // Permissions are granted. You can request location updates here.
+        val locationRequest = LocationRequest.create()
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            .setInterval(100)
+            .setFastestInterval(50)
+            .setMaxWaitTime(100)
+
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult) {
+                    val lastLocation = locationResult.lastLocation
+                    val userLocation = LatLng(lastLocation.latitude, lastLocation.longitude)
+                    DisplayUserLocationOnMap(userLocation)
+                }
+            },
+            Looper.getMainLooper()
+        )
+    }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun LocationPermissionHandler(onLocationPermissionGranted: () -> Unit) {
+    val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+
+    LaunchedEffect(permissionState) {
+        if (permissionState.status.isGranted) {
+            // Permissions granted
+            onLocationPermissionGranted()
+        } else {
+            // Permissions not granted, request location permission
+            permissionState.launchPermissionRequest()
+        }
+    }
+}
+
