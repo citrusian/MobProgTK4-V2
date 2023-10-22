@@ -1,4 +1,4 @@
-package com.example.mobprogtk4.Maps
+package com.example.mobprogtk4.profile
 
 import android.widget.Space
 import androidx.compose.foundation.layout.Arrangement
@@ -17,15 +17,31 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.mobprogtk4.Login.UserData
 
+
+
+@Preview(showBackground = true)
+@Composable
+fun ProfileScreenPreview() {
+    val userData = UserData( // Create a sample UserData object
+        userId = "000",
+        userName = "John Doe",
+        profilePictureUrl = "https://example.com/profile.jpg"
+    )
+
+    ProfileScreen(userData = userData)
+}
+
 @Composable
 fun ProfileScreen(
     userData: UserData?,
-    onSignOut: () -> Unit
+//    onSignOut: () -> Unit
+    onSignOut: () -> Unit = {}
 ) {
     Column (
         modifier = Modifier
@@ -53,7 +69,7 @@ fun ProfileScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
-        
+
         Button(onClick = onSignOut) {
             Text(text = "Sign Out")
         }
