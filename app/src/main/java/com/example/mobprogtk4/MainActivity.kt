@@ -120,6 +120,9 @@ class MainActivity : ComponentActivity() {
                         composable("profile"){
                             ProfileScreen(
                                 userData = googleAuthUiClient.getSignedInUser(),
+                                onReturn = {
+                                        navController.popBackStack()
+                                },
                                 onSignOut = {
                                     lifecycleScope.launch {
                                         googleAuthUiClient.signOut()
