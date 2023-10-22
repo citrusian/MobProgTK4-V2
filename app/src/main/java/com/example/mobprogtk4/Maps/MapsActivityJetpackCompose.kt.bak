@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Looper
 import android.provider.Settings.System.getString
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,10 +42,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.core.location.LocationManagerCompat.requestLocationUpdates
 import androidx.core.location.LocationRequestCompat.QUALITY_HIGH_ACCURACY
 import com.google.accompanist.permissions.isGranted
@@ -55,7 +51,6 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.Marker
-import com.google.maps.android.compose.rememberMarkerState
 
 @Preview(showBackground = true)
 @Composable
@@ -96,52 +91,56 @@ fun MapsJetpack(
             }
 
             // Maps
+            val singapore = LatLng(1.35, 103.87)
+            val cameraPositionState = rememberCameraPositionState {
+                position = CameraPosition.fromLatLngZoom(singapore, 10f)
+            }
 
             val context = LocalContext.current
             val apiKey = remember { context.getString(R.string.gmapsAPIkey) }
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-            val userLocation = remember { mutableStateOf<LatLng?>(null) }
-            RequestLocationUpdates(fusedLocationClient, context, userLocation)
-            GoogleMapsView(userLocation.value ?: LatLng(1.35, 103.87))
+            RequestLocationUpdates(fusedLocationClient, context)
+
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState,
+            ) {
+                LocationPermissionHandler {
+                    if (ActivityCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+
+                    } else {
+                        // Handle the case where permissions are not granted.
+                        // You can display a message or request permissions here.
+                    }
+                }
+            }
         }
     }
 }
 
-@Composable
-fun GoogleMapsView(userLocation: LatLng) {
-    Log.d("GoogleMapsView Enter", "$userLocation")
-    val updatedUserLocation by rememberUpdatedState(userLocation)
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(updatedUserLocation, 18f)
-    }
-
-    // Use LaunchedEffect to update the camera position when userLocation changes
-    LaunchedEffect(userLocation) {
-        cameraPositionState.position = CameraPosition.fromLatLngZoom(updatedUserLocation, 18f)
-    }
-
-    GoogleMap(
-        modifier = Modifier.fillMaxSize(),
-        cameraPositionState = cameraPositionState,
-    ) {
-        if (updatedUserLocation != null) {
-            Marker(
-                state = MarkerState(position = updatedUserLocation),
-                title = "Your Location",
-                draggable = false,
-            )
-        }
-        Log.d("GoogleMapsView Exit", "$updatedUserLocation")
+fun DisplayUserLocationOnMap(userLocation: LatLng?) {
+    if (userLocation != null) {
+        Marker(
+            position = userLocation,
+            title = "Your Location",
+            draggable = false,
+            onClick = {
+                // Handle marker click event, if needed
+            }
+        )
     }
 }
 
 
 @Composable
-private fun RequestLocationUpdates(
-    fusedLocationClient: FusedLocationProviderClient,
-    context: Context,
-    userLocation: MutableState<LatLng?>
-) {
+private fun RequestLocationUpdates(fusedLocationClient: FusedLocationProviderClient, context: Context) {
     if (ActivityCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -162,15 +161,12 @@ private fun RequestLocationUpdates(
             object : LocationCallback() {
                 override fun onLocationResult(locationResult: LocationResult) {
                     val lastLocation = locationResult.lastLocation
-                    val newUserLocation = LatLng(lastLocation.latitude, lastLocation.longitude)
-                    userLocation.value = newUserLocation
+                    val userLocation = LatLng(lastLocation.latitude, lastLocation.longitude)
+                    DisplayUserLocationOnMap(userLocation)
                 }
             },
             Looper.getMainLooper()
         )
-    }
-    else{
-        LocationPermissionHandler{}
     }
 }
 
@@ -181,11 +177,12 @@ fun LocationPermissionHandler(onLocationPermissionGranted: () -> Unit) {
 
     LaunchedEffect(permissionState) {
         if (permissionState.status.isGranted) {
+            // Permissions granted
             onLocationPermissionGranted()
         } else {
+            // Permissions not granted, request location permission
             permissionState.launchPermissionRequest()
         }
     }
 }
-
 

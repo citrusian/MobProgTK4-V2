@@ -94,11 +94,12 @@ dependencies {
     implementation ("androidx.compose.ui:ui:1.5.4")
     implementation ("androidx.compose.material:material:1.5.4")
 
-//    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    // Downgrade, newer version documentation doesn't work, and minimum tutorials
     implementation("com.google.android.gms:play-services-maps:18.0.0")
-    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.android.gms:play-services-location:18.0.0")
     implementation("com.google.maps.android:maps-compose:3.1.1")
     implementation("com.google.maps.android:maps-compose-utils:3.1.1")
     implementation("com.google.maps.android:maps-compose-widgets:3.1.1")
+    implementation("com.google.accompanist:accompanist-permissions:0.33.2-alpha")
 
 }

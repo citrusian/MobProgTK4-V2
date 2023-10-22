@@ -1,11 +1,15 @@
 package com.example.mobprogtk4.profile
 
 import android.widget.Space
+import android.window.BackEvent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
@@ -41,7 +45,8 @@ fun ProfileScreenPreview() {
 fun ProfileScreen(
     userData: UserData?,
 //    onSignOut: () -> Unit
-    onSignOut: () -> Unit = {}
+    onSignOut: () -> Unit = {},
+    onReturn: () -> Unit = {}
 ) {
     Column (
         modifier = Modifier
@@ -70,8 +75,29 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-        Button(onClick = onSignOut) {
-            Text(text = "Sign Out")
+
+        // Header and Button
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+            ,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
+
+            Button(
+                onClick = onSignOut,
+                modifier = Modifier.padding(end = 8.dp)
+            ) {
+                Text(text = "Sign Out")
+            }
+            Button(
+                onClick = onReturn,
+                modifier = Modifier.padding(end = 8.dp)
+            ) {
+                Text(text = "Back")
+            }
         }
 
     }
