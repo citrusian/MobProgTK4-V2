@@ -15,9 +15,8 @@ import com.example.mobprogtk4.ui.theme.MobProgTK4Theme
 // Preview, call MainContent function
 @Preview(showBackground = true)
 @Composable
-fun CalculatorPreview() {
-//    var calculatorVisibilityViewModel = viewModel<CalculatorVisibilityViewModel>()
-//    MainContent(calculatorVisibilityViewModel)sdfsdf
+fun PreviewWindow() {
+    MainWindows()
 }
 
 class MainActivity : ComponentActivity() {
@@ -30,7 +29,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    // Use Preview func as base, change to main func later
+                    PreviewWindow()
                 }
             }
         }
@@ -38,17 +38,15 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+fun MainWindows(){
+    Greeting("Android")
+}
+
+
+@Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
         modifier = modifier
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MobProgTK4Theme {
-        Greeting("Android")
-    }
 }
