@@ -1,7 +1,5 @@
 package com.example.mobprogtk4.profile
 
-import android.widget.Space
-import android.window.BackEvent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.mobprogtk4.Login.UserData
-
 
 
 @Preview(showBackground = true)

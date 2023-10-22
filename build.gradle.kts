@@ -7,6 +7,7 @@ buildscript {
     dependencies {
         classpath("com.google.gms:google-services:4.4.0")
 //        classpath("com.google.android.engage:engage-core:1.3.0")
+        classpath("com.google.gradle:osdetector-gradle-plugin:1.4.0")
     }
 }
 

@@ -1,6 +1,5 @@
 package com.example.mobprogtk4
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -23,7 +22,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mobprogtk4.Login.GoogleAuthUiClient
 import com.example.mobprogtk4.Login.SignInScreen
 import com.example.mobprogtk4.Login.SignInViewModel
-import com.example.mobprogtk4.Maps.MapsActivity
 import com.example.mobprogtk4.Maps.MapsJetpack
 import com.example.mobprogtk4.profile.ProfileScreen
 import com.example.mobprogtk4.ui.theme.MobProgTK4Theme

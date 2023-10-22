@@ -102,4 +102,10 @@ dependencies {
     implementation("com.google.maps.android:maps-compose-widgets:3.1.1")
     implementation("com.google.accompanist:accompanist-permissions:0.33.2-alpha")
 
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
+    implementation("org.bouncycastle:bcpkix-jdk15on:1.67")
+    implementation("org.openjsse:openjsse:1.1.10")
+
+
+
 }
