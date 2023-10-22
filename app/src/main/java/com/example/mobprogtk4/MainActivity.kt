@@ -1,5 +1,6 @@
 package com.example.mobprogtk4
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -22,6 +23,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mobprogtk4.Login.GoogleAuthUiClient
 import com.example.mobprogtk4.Login.SignInScreen
 import com.example.mobprogtk4.Login.SignInViewModel
+import com.example.mobprogtk4.Maps.MapsActivity
+import com.example.mobprogtk4.Maps.MapsJetpack
 import com.example.mobprogtk4.profile.ProfileScreen
 import com.example.mobprogtk4.ui.theme.MobProgTK4Theme
 import kotlinx.coroutines.launch
@@ -52,7 +55,10 @@ class MainActivity : ComponentActivity() {
 
                             LaunchedEffect(key1 = Unit){
                                 if (googleAuthUiClient.getSignedInUser() != null){
-                                    navController.navigate("profile")
+                                    navController.navigate(
+//                                        "profile"
+                                        "MapsJetpack"
+                                    )
                                     }
                             }
 
@@ -82,8 +88,13 @@ class MainActivity : ComponentActivity() {
 
                                     navController.navigate(
 //                                        "profile"
-                                        "mapsActivity"
+                                        "MapsJetpack"
                                     )
+
+
+//                                    val intent = Intent(applicationContext, MapsActivity::class.java)
+//                                    startActivity(intent)
+
                                     viewModel.resetState()
                                 }
                             }
@@ -115,11 +126,26 @@ class MainActivity : ComponentActivity() {
                                             "Signed Out",
                                             Toast.LENGTH_LONG
                                         ).show()
-                                        navController.popBackStack()
+//                                        navController.popBackStack()
+                                        navController.navigate(
+                                            "sign_in"
+                                        )
                                     }
                                 }
                             )
                         }
+
+
+                        composable("MapsJetpack"){
+                            MapsJetpack(
+                                onProfile = {
+                                    navController.navigate(
+                                        "profile"
+                                    )
+                                }
+                            )
+                        }
+
 
                     }
                 }
