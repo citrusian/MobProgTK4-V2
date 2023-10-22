@@ -3,6 +3,9 @@ import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    // Disabble kapt, it use JVM 17
+    // id("kotlin-kapt")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -82,4 +85,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
     implementation("androidx.navigation:navigation-compose:2.7.4")
     implementation("io.coil-kt:coil-compose:2.2.2")
+
+
+    implementation ("androidx.compose.ui:ui:1.4.0")
+    implementation ("androidx.compose.material:material:1.4.0")
 }
